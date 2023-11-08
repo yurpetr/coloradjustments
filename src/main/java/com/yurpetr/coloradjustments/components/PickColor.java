@@ -1,13 +1,13 @@
 package com.yurpetr.coloradjustments.components;
 
-import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+
+import com.yurpetr.coloradjustments.EyeDropper;
 
 public class PickColor extends JButton {
 
@@ -24,14 +24,16 @@ public class PickColor extends JButton {
         gbc.gridx     = 0;
         gbc.gridy     = 1;
 
-        addActionListener(new ActionListener() {
+        addActionListener(event -> EventQueue.invokeLater(() -> {
+            try {
+                EyeDropper frame = new EyeDropper(color);
+                frame.setVisible(true);
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.printf("Button pressed \"%s\"\n", getText());
-                color.setColor(Color.RED);
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
-        });
+        }));
+
     }
 
     public GridBagConstraints getGbc() {

@@ -2,7 +2,6 @@ package com.yurpetr.coloradjustments;
 
 import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,8 +9,6 @@ import java.awt.Insets;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JFrame;
@@ -24,6 +21,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import com.github.kwhat.jnativehook.mouse.NativeMouseEvent;
 import com.github.kwhat.jnativehook.mouse.NativeMouseInputListener;
+import com.yurpetr.coloradjustments.components.OperatedColor;
 import com.yurpetr.coloradjustments.components.RoundedPanel;
 import com.yurpetr.coloradjustments.components.SmoothLabel;
 
@@ -38,35 +36,14 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
     private static final long  serialVersionUID      = 1L;
     private RoundedPanel       contentPane, colorPane;
     private SmoothLabel        colorLabel;
-    private static EyeDropper  frame;
     private static Robot       robot;
     private static Color       color;
+    private OperatedColor      operatedColor;
+    private Thread             thread;
+    protected boolean          running               = true;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-
-            public void run() {
-                try {
-                    frame = new EyeDropper();
-                    frame.setVisible(true);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-    }
-
-    /**
-     * Create the frame.
-     * 
-     * @throws NativeHookException
-     */
-    public EyeDropper() throws NativeHookException {
+    public EyeDropper(OperatedColor operatedColor) {
+        this.operatedColor = operatedColor;
         try {
             robot = new Robot();
         } catch (AWTException e) {
@@ -83,7 +60,6 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
 
         contentPane = new RoundedPanel(frameShape, EYEDROPPER_PANE_COLOR);
         setContentPane(contentPane);
-//        setSize(frameShape.getBounds().getSize());
         setSize(260, 70);
 
         colorPane = new RoundedPanel(colorShape, INITIAL_PANEL_COLOR);
@@ -93,8 +69,6 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
         colorLabel.setFont(RGB_LABEL_FONT);
         colorLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-//        GridBagLayout gbl = new GridBagLayout();
-//        gbl.columnWeights = new double[] { 0.2, 0.8 };
         contentPane.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets  = new Insets(6, 6, 5, 5);
@@ -106,38 +80,31 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
         gbc.weighty = 50;
         contentPane.add(colorPane, gbc);
 
-//        JTextField jtf = new JTextField(2);
-//        jtf.setHorizontalAlignment(JTextField.CENTER);
-//        gbc.ipadx = 50;
-//        gbc.ipady = 50;
-//        gbc.gridy = 0;
-//        gbc.gridx = 0;
-//        jtf.setFocusable(false);
-//        jtf.setBackground(Color.RED);
-//        contentPane.add(jtf,gbc);
-
         gbc         = new GridBagConstraints();
         gbc.gridx   = GridBagConstraints.RELATIVE;
         gbc.gridy   = 0;
         gbc.weightx = 20;
         gbc.weighty = 50;
-//        gbc.fill    = GridBagConstraints.HORIZONTAL;
         contentPane.add(colorLabel, gbc);
 
-        GlobalScreen.setEventDispatcher(new SwingDispatchService());
-        GlobalScreen.registerNativeHook();
-        GlobalScreen.addNativeKeyListener(this);
-        GlobalScreen.addNativeMouseListener(this);
-        GlobalScreen.addNativeMouseMotionListener(this);
+        try {
+            GlobalScreen.setEventDispatcher(new SwingDispatchService());
+            GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(this);
+            GlobalScreen.addNativeMouseListener(this);
+            GlobalScreen.addNativeMouseMotionListener(this);
+        } catch (NativeHookException e) {
+            e.printStackTrace();
+        }
 
-        new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try {
-                    while (true) {
-                        Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
-                        Point newLocation   = getMouseLocation();
+                    while (running) {
+                        Point mouseLocation = getMouseLocation();
+                        Point newLocation   = getNewMouseLocation(mouseLocation);
                         color = robot.getPixelColor(mouseLocation.x, mouseLocation.y);
 
                         colorPane.setColor(color);
@@ -151,29 +118,30 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
                     e.printStackTrace();
                 }
             }
-        }).start();
+
+        });
+        thread.start();
 
     }
 
-    private static Point getMouseLocation() {
-        Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
-        Point newLocation   = new Point(mouseLocation.x + 10, (mouseLocation.y) + 10);
+    private Point getMouseLocation() {
+        return MouseInfo.getPointerInfo().getLocation();
+    }
+
+    private static Point getNewMouseLocation(Point mouseLocation) {
+        Point newLocation = new Point(mouseLocation.x + 10, (mouseLocation.y) + 10);
         return newLocation;
     }
 
     @Override
     public void nativeMouseClicked(NativeMouseEvent event) {
-        System.out.printf("Mouse button1 clicked: x = %d, y = %d\n", event.getX(), event.getY());
-
-        color = robot.getPixelColor(event.getX(), event.getY());
-        System.out.printf("rgb(%3d, %3d, %3d)\n", color.getRed(), color.getGreen(), color.getBlue());
 
         setVisible(true);
+        setExtendedState(JFrame.ICONIFIED);
+        setExtendedState(JFrame.NORMAL);
         toFront();
         requestFocus();
         repaint();
-        setExtendedState(JFrame.ICONIFIED);
-        setExtendedState(JFrame.NORMAL);
 
     }
 
@@ -185,19 +153,25 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
     @Override
     public void nativeKeyPressed(NativeKeyEvent event) {
         if (event.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
-            dispose();
-            System.exit(1);
+            stop();
+
         }
+
+        if (event.getKeyCode() == NativeKeyEvent.VC_F1) {
+            operatedColor.setColor(color);
+            stop();
+        }
+
     }
 
-//    public @Override void toFront() {
-//        int sta = super.getExtendedState() & ~JFrame.ICONIFIED & JFrame.NORMAL;
-//
-//        super.setExtendedState(sta);
-//        super.setAlwaysOnTop(true);
-//        super.toFront();
-//        super.requestFocus();
-//        super.setAlwaysOnTop(false);
-//    }
+    private void stop() {
+        try {
+            GlobalScreen.unregisterNativeHook();
+        } catch (NativeHookException e) {
+            e.printStackTrace();
+        }
+        running = false;
+        dispose();
+    }
 
 }

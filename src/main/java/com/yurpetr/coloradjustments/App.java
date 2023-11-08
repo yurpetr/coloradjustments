@@ -15,15 +15,12 @@ public class App {
      */
     @SuppressWarnings("javadoc")
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    App window = new App();
-                    window.frame.setVisible(true);
-                    int n = 123;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                App window = new App();
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -44,6 +41,8 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new TestPane());
         frame.pack();
+        frame.setAlwaysOnTop(true);
+        frame.setResizable(false);
 
     }
 }
