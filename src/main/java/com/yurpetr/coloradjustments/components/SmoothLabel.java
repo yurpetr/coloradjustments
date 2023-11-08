@@ -1,4 +1,4 @@
-package com.yurpetr.coloradjustments;
+package com.yurpetr.coloradjustments.components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -6,7 +6,7 @@ import java.awt.RenderingHints;
 
 import javax.swing.JLabel;
 
-class SmoothLabel extends JLabel {
+public class SmoothLabel extends JLabel {
 
     public SmoothLabel() {
         super();

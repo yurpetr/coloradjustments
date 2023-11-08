@@ -1,4 +1,4 @@
-package com.yurpetr.coloradjustments;
+package com.yurpetr.coloradjustments.components;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -8,13 +8,13 @@ import java.awt.Shape;
 
 import javax.swing.JPanel;
 
-class RoundedPanel extends JPanel {
+public class RoundedPanel extends JPanel {
 
     private static final Color BORDER_COLOR = new Color(80, 80, 80);
     private Shape              shape;
     private Color              color;
 
-    protected RoundedPanel(Shape shape, Color color) {
+    public RoundedPanel(Shape shape, Color color) {
         super(null);
         this.shape = shape;
         this.color = color;
