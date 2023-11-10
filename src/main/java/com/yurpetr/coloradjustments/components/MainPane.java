@@ -43,20 +43,6 @@ public class MainPane extends JPanel {
         targetPane.addRedListener(redListener);
         targetPane.addGreenListener(greenListener);
         targetPane.addBlueListener(blueListener);
-        
-
-//            JButton button = new JButton("test color");
-//            button.addActionListener(new ActionListener() {
-//
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    System.out.println(initialColor.getColor());
-//                    System.out.println(obtainedColor.getColor());
-//                    System.out.println(targetColor.getColor());
-//
-//                }
-//            });
-//            add(button);
 
     }
 
