@@ -1,4 +1,4 @@
-package com.yurpetr.coloradjustments;
+package com.yurpetr.coloradjustments.examples;
 
 import java.awt.FlowLayout;
 

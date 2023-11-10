@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-public class ColorPane extends JPanel {
+public class ColorPane extends JPanel implements PropertyChangeListener {
     private GridBagConstraints gbc = new GridBagConstraints();
     private ColorValue         red, green, blue;
     private PickColor          button;
@@ -26,7 +28,7 @@ public class ColorPane extends JPanel {
         setBorder(new TitledBorder(
                 string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase()));
         operatedColor = new OperatedColor();
-        button        = new PickColor(string.toLowerCase(), operatedColor);
+        operatedColor.addPropertyChangeListener(this);
 
         Color redColor, greenColor, blueColor;
 
@@ -51,6 +53,7 @@ public class ColorPane extends JPanel {
         add(green, green.getGbc());
         add(blue, blue.getGbc());
         if (type != ColorType.REQUIRED) {
+            button = new PickColor(string.toLowerCase(), operatedColor);
             add(button, button.getGbc());
         }
     }
@@ -85,6 +88,13 @@ public class ColorPane extends JPanel {
 
     public void addBlueListener(ChangeListener listener) {
         blue.getDocument().addDocumentListener(listener);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        red.setText(String.valueOf(operatedColor.getColor().getRed()));
+        green.setText(String.valueOf(operatedColor.getColor().getGreen()));
+        blue.setText(String.valueOf(operatedColor.getColor().getBlue()));
     }
 
 }

@@ -40,6 +40,9 @@ public class ChangeListener implements DocumentListener {
 
     @SuppressWarnings("static-method")
     private int correctColor(int initial, int target, int obtained) {
+        if (obtained == 0) {
+            return Integer.MAX_VALUE;
+        }
         int required = initial * target / obtained;
         return required;
     }

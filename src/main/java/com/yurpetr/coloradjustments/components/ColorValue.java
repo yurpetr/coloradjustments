@@ -24,12 +24,16 @@ public class ColorValue extends JTextField {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.ipadx  = 30;
         gbc.ipady  = 30;
-        gbc.gridx = gridx;
-        gbc.gridy = gridy;
+        gbc.gridx  = gridx;
+        gbc.gridy  = gridy;
     }
 
     public GridBagConstraints getGbc() {
         return gbc;
+    }
+
+    public void setColor(Color color) {
+        setBackground(color);
     }
 
 }

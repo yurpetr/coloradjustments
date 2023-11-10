@@ -24,7 +24,9 @@ public class PickColor extends JButton {
         gbc.gridx     = 0;
         gbc.gridy     = 1;
 
-        addActionListener(event -> EventQueue.invokeLater(() -> {
+        addActionListener(event -> 
+//        EventQueue.invokeLater(() -> 
+        {
             try {
                 EyeDropper frame = new EyeDropper(color);
                 frame.setVisible(true);
@@ -32,7 +34,9 @@ public class PickColor extends JButton {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
-        }));
+        }
+//        )
+        );
 
     }
 

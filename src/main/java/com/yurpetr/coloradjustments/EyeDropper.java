@@ -34,28 +34,29 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
     private static final Font  RGB_LABEL_FONT        = new Font("Courier New", Font.BOLD, 16);
     private static final int   PAUSE_TIME            = 1000 / 120;
     private static final long  serialVersionUID      = 1L;
-    private RoundedPanel       contentPane, colorPane;
-    private SmoothLabel        colorLabel;
-    private static Robot       robot;
-    private static Color       color;
-    private OperatedColor      operatedColor;
-    private Thread             thread;
-    protected boolean          running               = true;
+
+    private Robot         robot;
+    private RoundedPanel  contentPane, colorPane;
+    private SmoothLabel   colorLabel;
+    private Color         color;
+    private OperatedColor operatedColor;
+    private Thread        thread;
+    protected boolean     running = true;
 
     public EyeDropper(OperatedColor operatedColor) {
-        this.operatedColor = operatedColor;
         try {
             robot = new Robot();
         } catch (AWTException e) {
             e.printStackTrace();
         }
+        this.operatedColor = operatedColor;
         final RoundRectangle2D frameShape = new RoundRectangle2D.Double(5, 5, 250, 60, 20, 20);
         final RoundRectangle2D colorShape = new RoundRectangle2D.Double(0, 0, 50, 50, 20, 20);
         setResizable(false);
         setAlwaysOnTop(true);
         setUndecorated(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBackground(TRANSPARENT_COLOR);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocation(getMouseLocation());
 
         contentPane = new RoundedPanel(frameShape, EYEDROPPER_PANE_COLOR);
@@ -166,11 +167,15 @@ public class EyeDropper extends JFrame implements NativeMouseInputListener, Nati
 
     private void stop() {
         try {
+            GlobalScreen.removeNativeKeyListener(this);
+            GlobalScreen.removeNativeMouseListener(this);
+            GlobalScreen.removeNativeMouseMotionListener(this);
             GlobalScreen.unregisterNativeHook();
         } catch (NativeHookException e) {
             e.printStackTrace();
         }
-        running = false;
+        running       = false;
+        operatedColor = null;
         dispose();
     }
 

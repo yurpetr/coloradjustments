@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import com.yurpetr.coloradjustments.components.TestPane;
+import com.yurpetr.coloradjustments.components.MainPane;
 
 public class App {
 
@@ -39,7 +39,7 @@ public class App {
         frame = new JFrame();
         frame.setBounds(100, 100, 528, 551);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new TestPane());
+        frame.add(new MainPane());
         frame.pack();
         frame.setAlwaysOnTop(true);
         frame.setResizable(false);

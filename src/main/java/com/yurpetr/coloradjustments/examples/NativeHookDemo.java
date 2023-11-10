@@ -1,4 +1,4 @@
-package com.yurpetr.coloradjustments;
+package com.yurpetr.coloradjustments.examples;
 
 /* JNativeHook: Global keyboard and mouse listeners for Java.
  * Copyright (C) 2006-2021 Alexander Barker.  All Rights Reserved.

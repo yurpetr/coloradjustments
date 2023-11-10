@@ -4,10 +4,10 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-public class TestPane extends JPanel {
+public class MainPane extends JPanel {
 
 
-    public TestPane() {
+    public MainPane() {
         setLayout(new GridBagLayout());
 
         ColorPane initialPane = new ColorPane(ColorType.INITIAL, 0, 0);
