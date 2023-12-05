@@ -1,6 +1,5 @@
 package com.yurpetr.coloradjustments.components;
 
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -24,7 +23,7 @@ public class PickColor extends JButton {
         gbc.gridx     = 0;
         gbc.gridy     = 1;
 
-        addActionListener(event -> 
+        addActionListener(event ->
 //        EventQueue.invokeLater(() -> 
         {
             try {

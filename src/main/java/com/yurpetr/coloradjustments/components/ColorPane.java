@@ -34,14 +34,14 @@ public class ColorPane extends JPanel implements PropertyChangeListener {
 
         switch (type) {
         case INITIAL, OBTAINED, TARGET -> {
-            redColor   = new Color(255, 48, 48);
-            greenColor = new Color(48, 255, 48);
-            blueColor  = new Color(48, 48, 255);
+            redColor   = new Color(255, 63, 63);
+            greenColor = new Color(63, 200, 63);
+            blueColor  = new Color(63, 63, 255);
         }
         case REQUIRED -> {
-            redColor   = new Color(128, 128, 128);
-            greenColor = new Color(128, 128, 128);
-            blueColor  = new Color(128, 128, 128);
+            redColor   = new Color(127, 127, 127);
+            greenColor = new Color(127, 127, 127);
+            blueColor  = new Color(127, 127, 127);
         }
         default -> throw new IllegalArgumentException("Unexpected value: " + type);
         }
